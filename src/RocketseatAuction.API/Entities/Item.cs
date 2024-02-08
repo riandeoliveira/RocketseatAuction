@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
+using RocketseatAuction.API.Enums;
+
 namespace RocketseatAuction.API.Entities;
 
 [Table("Items")]
@@ -11,7 +13,7 @@ public class Item
 
     public string Brand { get; set; } = string.Empty;
 
-    public int Condition { get; set; }
+    public Condition Condition { get; set; }
 
     public decimal BasePrice { get; set; }
 
