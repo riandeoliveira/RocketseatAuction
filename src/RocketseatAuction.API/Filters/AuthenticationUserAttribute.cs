@@ -2,22 +2,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+using RocketseatAuction.API.Contracts;
 using RocketseatAuction.API.Repositories;
 
 namespace RocketseatAuction.API.Filters;
 
-public class AuthenticationUserAttribute : AuthorizeAttribute, IAuthorizationFilter
+public class AuthenticationUserAttribute(IUserRepository repository) : AuthorizeAttribute, IAuthorizationFilter
 {
+    private readonly IUserRepository _repository = repository;
+
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         try
         {
-            var repository = new RocketseatAuctionDbContext();
-
             var token = TokenOnRequest(context.HttpContext);
             var email = FromBase64String(token);
-
-            var exist = repository.Users.Any(user => user.Email.Equals(email));
+            var exist = _repository.ExistUserWithEmail(email);
 
             if (exist == false)
             {
